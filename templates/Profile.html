@@ -1,0 +1,119 @@
+﻿{% extends "layout.html" %}
+{% block content %}
+
+<h2>My Bookings</h2>
+
+<div class="card-saas">
+
+    {% for b in bookings %}
+
+    <div style="margin-bottom:20px; padding:15px; border-bottom:1px solid #1f2937;">
+
+        <h3>{{ b[1] }}</h3>
+
+        <p class="muted">
+            Zone: {{ b[2] }} <br>
+            Address: {{ b[3] }} <br>
+            Date: {{ b[4] }} <br>
+            Time: {{ b[5] }} <br>
+            Trainer: {{ b[6] }} <br>
+            Price: {{ b[7] }} KZT
+        </p>
+
+        <!-- ================= UPDATE FORM ================= -->
+        <form method="POST" action="/update/{{ b[0] }}">
+
+            <select name="training">
+
+                <option value="Boxing"
+                        {% if b[1]=='Boxing' %}selected{% endif %}>
+                    Boxing
+                </option>
+
+                <option value="Yoga"
+                        {% if b[1]=='Yoga' %}selected{% endif %}>
+                    Yoga
+                </option>
+
+                <option value="Gym"
+                        {% if b[1]=='Gym' %}selected{% endif %}>
+                    Gym
+                </option>
+
+            </select>
+            <select name="gym_zone">
+
+                <option value="Male"
+                        {% if b[2]=='Male' %}selected{% endif %}>
+                    Male
+                </option>
+
+                <option value="Female"
+                        {% if b[2]=='Female' %}selected{% endif %}>
+                    Female
+                </option>
+
+                <option value="Mixed"
+                        {% if b[2]=='Mixed' %}selected{% endif %}>
+                    Mixed
+                </option>
+
+            </select>
+            <select name="gym_address">
+
+                <option value="Astana Fitness Center"
+                        {% if b[3]=='Astana Fitness Center' %}selected{% endif %}>
+                    Astana Fitness Center
+                </option>
+
+                <option value="Iron Gym Mega Silk Way"
+                        {% if b[3]=='Iron Gym Mega Silk Way' %}selected{% endif %}>
+                    Iron Gym Mega Silk Way
+                </option>
+
+                <option value="Beast Mode Gym"
+                        {% if b[3]=='Beast Mode Gym' %}selected{% endif %}>
+                    Beast Mode Gym
+                </option>
+
+            </select>
+
+            <input type="date" name="date" value="{{ b[4] }}" required>
+            <input type="time" name="time" value="{{ b[5] }}" required>
+
+            <p class="muted">Trainer</p>
+
+            <label>
+                <input type="radio" name="trainer_type" value="with"
+                       {% if b[6]=='with' %}checked{% endif %}>
+                With trainer
+            </label>
+
+            <label>
+                <input type="radio" name="trainer_type" value="without"
+                       {% if b[6]=='without' %}checked{% endif %}>
+                Without trainer
+            </label>
+
+            <br><br>
+
+            <button type="submit" class="btn-primary">
+                Update Booking
+            </button>
+
+        </form>
+
+        <!-- ================= DELETE ================= -->
+        <form method="POST" action="/delete/{{ b[0] }}" style="margin-top:10px;">
+            <button type="submit" style="background:red; color:white;">
+                Delete
+            </button>
+        </form>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

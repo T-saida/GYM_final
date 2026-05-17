@@ -1,0 +1,71 @@
+body {
+    background: #0b0f14;
+    color: white;
+    font-family: Arial;
+}
+
+/* SIDEBAR STYLE */
+.sidebar {
+    width: 240px;
+    height: 100vh;
+    position: fixed;
+    background: #111827;
+    padding: 20px;
+}
+
+    .sidebar a {
+        display: block;
+        color: #9ca3af;
+        padding: 10px;
+        text-decoration: none;
+        border-radius: 10px;
+    }
+
+        .sidebar a:hover {
+            background: #1f2937;
+            color: white;
+        }
+
+/* MAIN AREA */
+.main {
+    margin-left: 260px;
+    padding: 30px;
+}
+
+/* SAAS CARDS */
+.card-saas {
+    background: #111827;
+    border: 1px solid #1f2937;
+    border-radius: 16px;
+    padding: 20px;
+}
+
+/* BUTTONS */
+.btn-primary {
+    background: #6366f1;
+    border: none;
+}
+
+.btn-danger {
+    background: #ef4444;
+    border: none;
+}
+
+/* INPUTS */
+input, select {
+    background: #0f172a;
+    border: 1px solid #1f2937;
+    color: white;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+/* STATS */
+.stat {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.muted {
+    color: #9ca3af;
+}

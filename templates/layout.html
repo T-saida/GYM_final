@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gym Bro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <h2>Gym Bro</h2>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/profile">My Bookings</a>
+        <a href="/logout">Logout</a>
+    </div>
+
+    <div class="main">
+        {% block content %}{% endblock %}
+    </div>
+
+</body>
+</html>
