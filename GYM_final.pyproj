@@ -28,11 +28,13 @@
     <Folder Include="templates\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="requirements.txt" />
     <Content Include="static\style.css" />
     <Content Include="templates\index.html" />
     <Content Include="templates\layout.html" />
     <Content Include="templates\Profile.html" />
     <Content Include="templates\dashboard.html" />
+    <Content Include="vercel.json" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
