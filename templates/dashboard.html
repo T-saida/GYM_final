@@ -3,57 +3,60 @@
 
 <h2>Welcome, {{ username }}</h2>
 
-<div class="card-saas">
-    <h3>Book Training</h3>
+<div class="dashboard-wrapper">
+    <div class="card-saas">
+        <h3>Book Training</h3>
 
-    <form method="POST" action="/book">
+        <form method="POST" action="/book">
 
-        <p class="muted">Training</p>
-        <select name="training">
-            <option>Boxing</option>
-            <option>Yoga</option>
-            <option>Gym</option>
-        </select>
+            <p class="muted">Training</p>
+            <select name="training">
+                <option>Boxing</option>
+                <option>Yoga</option>
+                <option>Gym</option>
+            </select>
 
-        <p class="muted">Zone</p>
-        <select name="gym_zone">
-            <option>Male</option>
-            <option>Female</option>
-            <option>Mixed</option>
-        </select>
+            <p class="muted">Zone</p>
+            <select name="gym_zone">
+                <option>Male</option>
+                <option>Female</option>
+                <option>Mixed</option>
+            </select>
 
-        <p class="muted">Gym Address</p>
-        <select name="gym_address">
-            <option>Astana Fitness Center</option>
-            <option>Iron Gym Mega Silk Way</option>
-            <option>Beast Mode Gym</option>
-        </select>
+            <p class="muted">Gym Address</p>
+            <select name="gym_address">
+                <option>Astana Fitness Center</option>
+                <option>Iron Gym Mega Silk Way</option>
+                <option>Beast Mode Gym</option>
+            </select>
 
-        <p class="muted">Date</p>
-        <input type="date" name="date">
+            <p class="muted">Date</p>
+            <input type="date" name="date">
 
-        <p class="muted">Time</p>
-        <input type="time" name="time">
+            <p class="muted">Time</p>
+            <input type="time" name="time">
 
-        <p class="muted">Trainer option</p>
+            <p class="muted">Trainer option</p>
 
-        <label>
-            <input type="radio" name="trainer_type" value="with" required>
-            With Trainer
-        </label>
+            <label>
+                <input type="radio" name="trainer_type" value="with" required>
+                With Trainer
+            </label>
 
-        <br>
+            <br>
 
-        <label>
-            <input type="radio" name="trainer_type" value="without">
-            Without Trainer
-        </label>
+            <label>
+                <input type="radio" name="trainer_type" value="without">
+                Without Trainer
+            </label>
 
-        <br><br>
+            <br><br>
 
-        <button class="btn-primary">Book Session</button>
+            <button class="btn-primary">Book Session</button>
 
-    </form>
+        </form>
+    </div>
+</div>
 </div>
 
-{% endblock %}
+    {% endblock %}

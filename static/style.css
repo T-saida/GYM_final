@@ -1,7 +1,12 @@
 body {
-    background: #0b0f14;
+    /* Фоновое фото с затемнением */
+    background: linear-gradient(rgba(11, 15, 20, 0.85), rgba(11, 15, 20, 0.85)), url('https://images.unsplash.com/photo-1778828494354-9b717d36dc99?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     color: white;
-    font-family: Arial;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
 }
 
 /* SIDEBAR STYLE */
@@ -9,20 +14,24 @@ body {
     width: 240px;
     height: 100vh;
     position: fixed;
-    background: #111827;
+    /* Делаем сайдбар полупрозрачным */
+    background: rgba(17, 24, 39, 0.6);
+    backdrop-filter: blur(10px);
     padding: 20px;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
 }
 
     .sidebar a {
         display: block;
         color: #9ca3af;
-        padding: 10px;
+        padding: 12px;
         text-decoration: none;
         border-radius: 10px;
+        transition: 0.3s;
     }
 
         .sidebar a:hover {
-            background: #1f2937;
+            background: rgba(255, 255, 255, 0.1);
             color: white;
         }
 
@@ -32,40 +41,90 @@ body {
     padding: 30px;
 }
 
-/* SAAS CARDS */
+/* SAAS CARDS (Эффект стекла) */
 .card-saas {
-    background: #111827;
-    border: 1px solid #1f2937;
-    border-radius: 16px;
-    padding: 20px;
+    background: rgba(17, 24, 39, 0.5);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
 }
+
+/* INPUTS & SELECTS (Без рамок, только нижняя линия) */
+input, select {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+    padding: 12px 5px !important;
+    border-radius: 0 !important;
+    width: 100%;
+    outline: none;
+    transition: 0.3s;
+}
+
+    input:focus, select:focus {
+        border-bottom: 1px solid #6366f1 !important;
+    }
 
 /* BUTTONS */
 .btn-primary {
     background: #6366f1;
     border: none;
+    padding: 12px 25px;
+    border-radius: 10px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
 }
+
+    .btn-primary:hover {
+        background: #4f46e5;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+    }
 
 .btn-danger {
     background: #ef4444;
     border: none;
-}
-
-/* INPUTS */
-input, select {
-    background: #0f172a;
-    border: 1px solid #1f2937;
-    color: white;
-    padding: 8px;
-    border-radius: 8px;
+    padding: 12px 25px;
+    border-radius: 10px;
 }
 
 /* STATS */
 .stat {
-    font-size: 28px;
+    font-size: 32px;
     font-weight: bold;
+    color: #6366f1;
 }
 
 .muted {
-    color: #9ca3af;
+    color: rgba(156, 163, 175, 0.8);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Чтобы в выпадающем списке текст был виден */
+select option {
+    background: #111827;
+    color: white;
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .main {
+        margin-left: 0;
+        padding: 20px;
+    }
 }

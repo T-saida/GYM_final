@@ -57,58 +57,53 @@ def home():
     return render_template("index.html")
 
 
-# ================= REGISTER =================
-@app.route("/register", methods=["POST"])
+# ================= AUTH =================
+
+@app.route('/register', methods=['GET', 'POST'])
 def register():
-    username = request.form.get("username", "").strip()
-    password_raw = request.form.get("password", "")
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        
+        # Хешируем пароль (безопасное хранение)
+        hashed_pw = generate_password_hash(password)
+        
+        conn = get_db()
+        cur = conn.cursor()
+        try:
+            cur.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, hashed_pw))
+            conn.commit()
+            return redirect(url_for('home')) # После регистрации отправляем на вход
+        except sqlite3.IntegrityError:
+            return "Этот логин уже занят!"
+        finally:
+            conn.close()
+            
+    return render_template('index.html')
 
-    if not username or not password_raw:
-        return "Missing fields"
-
-    password = generate_password_hash(password_raw)
-
-    conn = get_db()
-    cur = conn.cursor()
-
-    try:
-        cur.execute(
-            "INSERT INTO users (username, password) VALUES (?, ?)",
-            (username, password)
-        )
-
-        user_id = cur.lastrowid
-        conn.commit()
-        conn.close()
-
-        session["user_id"] = user_id
-        session["username"] = username
-
-        return redirect(url_for("dashboard"))
-
-    except:
-        return "User already exists"
-
-
-# ================= LOGIN =================
-@app.route("/login", methods=["POST"])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    username = request.form.get("username", "")
-    password = request.form.get("password", "")
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM users WHERE username = ?", (username,))
+        user = cur.fetchone()
+        conn.close()
+        
+        # Проверяем пароль
+        if user and check_password_hash(user['password'], password):
+            session["user_id"] = user['id']
+            session["username"] = user['username']
+            return redirect(url_for('dashboard'))
+        else:
+            return "Неверный логин или пароль!"
+            
+    return render_template('index.html')
 
-    conn = get_db()
-    cur = conn.cursor()
 
-    cur.execute("SELECT id, password FROM users WHERE username=?", (username,))
-    user = cur.fetchone()
-    conn.close()
-
-    if user and check_password_hash(user[1], password):
-        session["user_id"] = user[0]
-        session["username"] = username
-        return redirect(url_for("dashboard"))
-
-    return "Invalid credentials"
 
 
 # ================= DASHBOARD =================
