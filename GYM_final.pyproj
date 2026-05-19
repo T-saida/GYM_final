@@ -11,6 +11,7 @@
     <OutputPath>.</OutputPath>
     <Name>GYM_final</Name>
     <RootNamespace>GYM_final</RootNamespace>
+    <SuppressEnvironmentCreationPrompt>True</SuppressEnvironmentCreationPrompt>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,7 +33,7 @@
     <Content Include="static\style.css" />
     <Content Include="templates\index.html" />
     <Content Include="templates\layout.html" />
-    <Content Include="templates\Profile.html" />
+    <Content Include="templates\profile.html" />
     <Content Include="templates\dashboard.html" />
     <Content Include="vercel.json" />
   </ItemGroup>
