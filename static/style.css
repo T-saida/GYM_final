@@ -1,5 +1,4 @@
 body {
-    /* Фоновое фото с затемнением */
     background: linear-gradient(rgba(11, 15, 20, 0.85), rgba(11, 15, 20, 0.85)), url('https://images.unsplash.com/photo-1778828494354-9b717d36dc99?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
     background-size: cover;
     background-position: center;
@@ -9,12 +8,10 @@ body {
     margin: 0;
 }
 
-/* SIDEBAR STYLE */
 .sidebar {
     width: 240px;
     height: 100vh;
     position: fixed;
-    /* Делаем сайдбар полупрозрачным */
     background: rgba(17, 24, 39, 0.6);
     backdrop-filter: blur(10px);
     padding: 20px;
@@ -35,13 +32,11 @@ body {
             color: white;
         }
 
-/* MAIN AREA */
 .main {
     margin-left: 260px;
     padding: 30px;
 }
 
-/* SAAS CARDS (Эффект стекла) */
 .card-saas {
     background: rgba(17, 24, 39, 0.5);
     backdrop-filter: blur(15px);
@@ -51,7 +46,6 @@ body {
     box-shadow: 0 15px 35px rgba(0,0,0,0.3);
 }
 
-/* INPUTS & SELECTS (Без рамок, только нижняя линия) */
 input, select {
     background: transparent !important;
     border: none !important;
@@ -68,7 +62,6 @@ input, select {
         border-bottom: 1px solid #6366f1 !important;
     }
 
-/* BUTTONS */
 .btn-primary {
     background: #6366f1;
     border: none;
@@ -107,13 +100,11 @@ input, select {
     letter-spacing: 0.5px;
 }
 
-/* Чтобы в выпадающем списке текст был виден */
 select option {
     background: #111827;
     color: white;
 }
 
-/* ===== MOBILE ===== */
 @media (max-width: 768px) {
     .sidebar {
         width: 100%;

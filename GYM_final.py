@@ -6,7 +6,6 @@ app = Flask(__name__)
 app.secret_key = "gym_saas_key"
 
 
-# ================= DB =================
 def init_db():
     conn = sqlite3.connect("gym.db")
     cur = conn.cursor()
@@ -37,8 +36,6 @@ def init_db():
     conn.commit()
     conn.close()
 
-
-# ================= HELPERS =================
 def get_db():
     conn = sqlite3.connect("gym.db")
     conn.row_factory = sqlite3.Row
@@ -49,7 +46,6 @@ def login_required():
     return "user_id" in session
 
 
-# ================= HOME =================
 @app.route("/")
 def home():
     if login_required():
@@ -57,7 +53,6 @@ def home():
     return render_template("index.html")
 
 
-# ================= AUTH =================
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -65,7 +60,6 @@ def register():
         username = request.form.get('username')
         password = request.form.get('password')
         
-        # Хешируем пароль (безопасное хранение)
         hashed_pw = generate_password_hash(password)
         
         conn = get_db()
@@ -73,7 +67,7 @@ def register():
         try:
             cur.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, hashed_pw))
             conn.commit()
-            return redirect(url_for('home')) # После регистрации отправляем на вход
+            return redirect(url_for('home')) 
         except sqlite3.IntegrityError:
             return "Этот логин уже занят!"
         finally:
@@ -93,7 +87,6 @@ def login():
         user = cur.fetchone()
         conn.close()
         
-        # Проверяем пароль
         if user and check_password_hash(user['password'], password):
             session["user_id"] = user['id']
             session["username"] = user['username']
@@ -106,7 +99,6 @@ def login():
 
 
 
-# ================= DASHBOARD =================
 @app.route("/dashboard")
 def dashboard():
     if not login_required():
@@ -115,7 +107,6 @@ def dashboard():
     return render_template("dashboard.html", username=session["username"])
 
 
-# ================= BOOK =================
 @app.route("/book", methods=["POST"])
 def book():
     if not login_required():
@@ -162,7 +153,6 @@ def book():
     return redirect(url_for("profile"))
 
 
-# ================= PROFILE =================
 @app.route("/profile")
 def profile():
     if not login_required():
@@ -190,8 +180,6 @@ def profile():
 
     return render_template("profile.html", bookings=bookings)
 
-
-# ================= UPDATE =================
 @app.route("/update/<int:bid>", methods=["POST"])
 def update_booking(bid):
     if not login_required():
@@ -237,7 +225,6 @@ def update_booking(bid):
     return redirect(url_for("profile"))
 
 
-# ================= DELETE =================
 @app.route("/delete/<int:bid>", methods=["POST"])
 def delete(bid):
     if not login_required():
@@ -257,14 +244,12 @@ def delete(bid):
     return redirect(url_for("profile"))
 
 
-# ================= LOGOUT =================
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for("home"))
 
 
-# ================= RUN =================
 if __name__ == "__main__":
     init_db()
     app.run(debug=True)

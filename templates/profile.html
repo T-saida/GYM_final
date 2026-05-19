@@ -20,7 +20,6 @@
             Price: {{ b[7] }} KZT
         </p>
 
-        <!-- ================= UPDATE FORM ================= -->
         <form method="POST" action="/update/{{ b[0] }}">
 
             <select name="training">
@@ -103,7 +102,6 @@
 
         </form>
 
-        <!-- ================= DELETE ================= -->
         <form method="POST" action="/delete/{{ b[0] }}" style="margin-top:10px;">
             <button type="submit" style="background:red; color:white;">
                 Delete

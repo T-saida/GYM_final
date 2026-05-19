@@ -1,119 +1,160 @@
-<link href="https://jsdelivr.net" rel="stylesheet">
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <!-- КРИТИЧЕСКИ ВАЖНО ДЛЯ МОБИЛЬНЫХ -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Bro - Авторизация</title>
 
-<style>
-    body {
-        background: linear-gradient(rgba(11, 15, 20, 0.75), rgba(11, 15, 20, 0.75)), url('https://images.unsplash.com/photo-1571902943202-507ec2618e8f?q=80&w=1075&auto=format&fit=crop');
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-        color: white;
-        font-family: 'Segoe UI', Arial, sans-serif;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        margin: 0;
-    }
-
-    .auth-container {
-        background: rgba(17, 24, 39, 0.8);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 20px;
-        padding: 40px;
-        width: 100%;
-        max-width: 380px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        text-align: center;
-    }
-
-    .logo-placeholder {
-        font-size: 26px;
-        font-weight: 800;
-        margin-bottom: 35px;
-        letter-spacing: -1px;
-    }
-
-    .form-control-saas {
-        background: rgba(15, 23, 42, 0.6);
-        border: 1px solid #334155;
-        color: white !important;
-        padding: 14px;
-        border-radius: 10px;
-        margin-bottom: 15px;
-    }
-
-        .form-control-saas:focus {
-            background: rgba(30, 41, 59, 0.8);
-            border-color: #6366f1;
-            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+    <style>
+        * {
+            box-sizing: border-box;
         }
 
-    .btn-login {
-        background: #6366f1;
-        border: none;
-        padding: 14px;
-        font-weight: 700;
-        width: 100%;
-        border-radius: 10px;
-        transition: 0.3s;
-    }
-
-        .btn-login:hover {
-            background: #4f46e5;
-            transform: translateY(-1px);
-        }
-
-    .create-account-link {
-        display: block;
-        margin-top: 25px;
-        color: #9ca3af;
-        text-decoration: none;
-        font-size: 14px;
-        transition: 0.2s;
-        cursor: pointer;
-    }
-
-        .create-account-link:hover {
+        body {
+            background: linear-gradient(rgba(11, 15, 20, 0.75), rgba(11, 15, 20, 0.75)), url('https://images.unsplash.com/photo-1571902943202-507ec2618e8f?q=80&w=1075&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             color: white;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px; /* Чтобы на смартфонах контейнер не прилипал к верху/низу */
         }
-</style>
 
-<div class="auth-container">
-    <div class="logo-placeholder">
-        GYM <span id="logo-accent" style="color: #6366f1;">BRO</span>
+        .auth-container {
+            background: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px); /* Поддержка для Safari (iPhone) */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px 30px; /* Немного уменьшили боковые отступы для узких экранов */
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .logo-placeholder {
+            font-size: 26px;
+            font-weight: 800;
+            margin-bottom: 35px;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+        }
+
+        .form-control-saas {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid #334155;
+            color: white !important;
+            padding: 14px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            width: 100%; /* Занимает всю ширину контейнера */
+            font-size: 16px; /* Защита от авто-зума на iOS при фокусе */
+            outline: none;
+            transition: 0.2s;
+        }
+
+            .form-control-saas:focus {
+                background: rgba(30, 41, 59, 0.8);
+                border-color: #6366f1;
+                box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+            }
+
+        .btn-login {
+            background: #6366f1;
+            border: none;
+            color: white;
+            padding: 14px;
+            font-weight: 700;
+            width: 100%;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            -webkit-tap-highlight-color: transparent; /* Убирает синий блик при тапе на мобильных */
+        }
+
+            .btn-login:hover {
+                background: #4f46e5;
+            }
+
+            .btn-login:active {
+                transform: scale(0.98); /* Приятный отклик при нажатии */
+            }
+
+        .create-account-link {
+            display: inline-block;
+            margin-top: 25px;
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.2s;
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+            .create-account-link:hover {
+                color: white;
+            }
+
+        /* Дополнительная оптимизация для совсем маленьких экранов (до 360px) */
+        @media (max-width: 360px) {
+            .auth-container {
+                padding: 30px 20px;
+            }
+
+            .logo-placeholder {
+                font-size: 22px;
+                margin-bottom: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container">
+        <div class="logo-placeholder">
+            GYM <span id="logo-accent" style="color: #6366f1;">BRO</span>
+        </div>
+
+        <form id="auth-form" method="POST" action="/login">
+            <!-- Добавлены типы для лучшего вызова мобильной клавиатуры -->
+            <input class="form-control-saas" type="text" name="username" placeholder="Логин" required autocomplete="username">
+            <input class="form-control-saas" type="password" name="password" placeholder="Пароль" required autocomplete="current-password">
+
+            <button type="submit" class="btn-login">Вход</button>
+        </form>
+
+        <a class="create-account-link">Create Account</a>
     </div>
 
-    <form id="auth-form" method="POST" action="/login">
-        <input class="form-control form-control-saas" name="username" placeholder="Логин" required>
-        <input class="form-control form-control-saas" type="password" name="password" placeholder="Пароль" required>
+    <script>
+        const link = document.querySelector('.create-account-link');
+        const form = document.querySelector('#auth-form');
+        const accent = document.querySelector('#logo-accent');
+        const btn = document.querySelector('.btn-login');
 
-        <button type="submit" class="btn btn-primary btn-login">Вход</button>
-    </form>
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
 
-    <a class="create-account-link">Create Account</a>
-</div>
-
-<script>const link = document.querySelector('.create-account-link');
-    const form = document.querySelector('#auth-form');
-    const accent = document.querySelector('#logo-accent');
-    const btn = document.querySelector('.btn-login');
-
-    link.addEventListener('click', (e) => {
-        e.preventDefault();
-
-        // Если сейчас форма логина — меняем на регистрацию
-        if (form.getAttribute('action') === '/login') {
-            form.setAttribute('action', '/register');
-            accent.innerText = 'REGISTRATION';
-            btn.innerText = 'Зарегистрироваться';
-            link.innerText = 'Already have an account? Login';
-        } else {
-            // И наоборот
-            form.setAttribute('action', '/login');
-            accent.innerText = 'BRO';
-            btn.innerText = 'Вход';
-            link.innerText = 'Create Account';
-        }
-    });</script>
-
+            if (form.getAttribute('action') === '/login') {
+                form.setAttribute('action', '/register');
+                accent.innerText = 'REGISTRATION';
+                btn.innerText = 'Зарегистрироваться';
+                link.innerText = 'Already have an account? Login';
+            } else {
+                form.setAttribute('action', '/login');
+                accent.innerText = 'BRO';
+                btn.innerText = 'Вход';
+                link.innerText = 'Create Account';
+            }
+    </script>
+</body>
+</html>
