@@ -6,9 +6,15 @@ from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__)
 app.secret_key = "gym_saas_key"
 
+app.config.update(
+    SESSION_COOKIE_SECURE=True,
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax"
+)
 
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-DB_PATH = os.path.join(BASE_DIR, "gym.db")
+# Render-safe database path
+DB_PATH = "/tmp/gym.db"
+
 
 def init_db():
     conn = sqlite3.connect(DB_PATH)
@@ -41,7 +47,9 @@ def init_db():
     conn.close()
 
 
-init_db()
+with app.app_context():
+    init_db()
+
 
 def get_db():
     conn = sqlite3.connect(DB_PATH)
@@ -62,61 +70,104 @@ def home():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+
     if request.method == 'POST':
+
         username = request.form.get('username')
         password = request.form.get('password')
-        
+
+        print("REGISTER ATTEMPT:", username)
+
         if not username or not password:
             return "Заполните все поля!"
-            
+
         hashed_pw = generate_password_hash(password)
-        
+
         conn = get_db()
         cur = conn.cursor()
+
         try:
-            cur.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, hashed_pw))
+            cur.execute(
+                "INSERT INTO users (username, password) VALUES (?, ?)",
+                (username, hashed_pw)
+            )
+
             conn.commit()
-            return redirect(url_for('home')) 
-        except sqlite3.IntegrityError:
+
+            print("REGISTER SUCCESS")
+
+            return redirect(url_for('home'))
+
+        except sqlite3.IntegrityError as e:
+            print("REGISTER ERROR:", e)
             return "Этот логин уже занят!"
+
+        except Exception as e:
+            print("BIG ERROR:", e)
+            return str(e)
+
         finally:
             conn.close()
-            
+
     return render_template('index.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+
     if request.method == 'POST':
+
         username = request.form.get('username')
         password = request.form.get('password')
-        
+
         conn = get_db()
         cur = conn.cursor()
-        cur.execute("SELECT * FROM users WHERE username = ?", (username,))
+
+        cur.execute(
+            "SELECT * FROM users WHERE username = ?",
+            (username,)
+        )
+
         user = cur.fetchone()
+
         conn.close()
-        
+
+        if user:
+            print("USER FOUND")
+
         if user and check_password_hash(user['password'], password):
+
+            print("LOGIN SUCCESS")
+
             session["user_id"] = user['id']
             session["username"] = user['username']
+
             return redirect(url_for('dashboard'))
+
         else:
+            print("LOGIN FAILED")
             return "Неверный логин или пароль!"
-            
+
     return render_template('index.html')
 
 
 @app.route("/dashboard")
 def dashboard():
+
+    print(session)
+
     if not login_required():
         return redirect(url_for("home"))
 
-    return render_template("dashboard.html", username=session["username"])
+    return render_template(
+        "dashboard.html",
+        username=session["username"]
+    )
 
 
 @app.route("/book", methods=["POST"])
 def book():
+
     if not login_required():
         return redirect(url_for("home"))
 
@@ -163,6 +214,7 @@ def book():
 
 @app.route("/profile")
 def profile():
+
     if not login_required():
         return redirect(url_for("home"))
 
@@ -184,13 +236,18 @@ def profile():
     """, (session["user_id"],))
 
     bookings = cur.fetchall()
+
     conn.close()
 
-    return render_template("profile.html", bookings=bookings)
+    return render_template(
+        "profile.html",
+        bookings=bookings
+    )
 
 
 @app.route("/update/<int:bid>", methods=["POST"])
 def update_booking(bid):
+
     if not login_required():
         return redirect(url_for("home"))
 
@@ -236,6 +293,7 @@ def update_booking(bid):
 
 @app.route("/delete/<int:bid>", methods=["POST"])
 def delete(bid):
+
     if not login_required():
         return redirect(url_for("home"))
 
@@ -255,9 +313,11 @@ def delete(bid):
 
 @app.route("/logout")
 def logout():
+
     session.clear()
+
     return redirect(url_for("home"))
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000)
