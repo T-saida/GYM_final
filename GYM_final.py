@@ -1,46 +1,63 @@
 import os
 import sqlite3
-from flask import Flask, render_template, request, redirect, url_for, session
-from werkzeug.security import generate_password_hash, check_password_hash
+
+from flask import (
+    Flask,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    session
+)
+
+from werkzeug.security import (
+    generate_password_hash,
+    check_password_hash
+)
 
 app = Flask(__name__)
+
 app.secret_key = "gym_saas_key"
 
 app.config.update(
-    SESSION_COOKIE_SECURE=True,
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SAMESITE="Lax"
 )
 
-# Render-safe database path
-DB_PATH = "/tmp/gym.db"
+# DATABASE
+
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
+DB_PATH = os.path.join(BASE_DIR, "gym.db")
 
 
 def init_db():
+
     conn = sqlite3.connect(DB_PATH)
+
     cur = conn.cursor()
 
     cur.execute("""
-    CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT UNIQUE,
-        password TEXT,
-        is_admin INTEGER DEFAULT 0
-    )
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT UNIQUE,
+            password TEXT,
+            is_admin INTEGER DEFAULT 0
+        )
     """)
 
     cur.execute("""
-    CREATE TABLE IF NOT EXISTS bookings (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER,
-        training_type TEXT,
-        gym_zone TEXT,
-        gym_address TEXT,
-        booking_date TEXT,
-        booking_time TEXT,
-        trainer_type TEXT,
-        price INTEGER
-    )
+        CREATE TABLE IF NOT EXISTS bookings (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            training_type TEXT,
+            gym_zone TEXT,
+            gym_address TEXT,
+            booking_date TEXT,
+            booking_time TEXT,
+            trainer_type TEXT,
+            price INTEGER
+        )
     """)
 
     conn.commit()
@@ -52,29 +69,39 @@ with app.app_context():
 
 
 def get_db():
+
     conn = sqlite3.connect(DB_PATH)
+
     conn.row_factory = sqlite3.Row
+
     return conn
 
 
 def login_required():
+
     return "user_id" in session
 
 
+# HOME
+
 @app.route("/")
 def home():
+
     if login_required():
         return redirect(url_for("dashboard"))
+
     return render_template("index.html")
 
 
-@app.route('/register', methods=['GET', 'POST'])
+# REGISTER
+
+@app.route("/register", methods=["GET", "POST"])
 def register():
 
-    if request.method == 'POST':
+    if request.method == "POST":
 
-        username = request.form.get('username')
-        password = request.form.get('password')
+        username = request.form.get("username")
+        password = request.form.get("password")
 
         print("REGISTER ATTEMPT:", username)
 
@@ -84,9 +111,11 @@ def register():
         hashed_pw = generate_password_hash(password)
 
         conn = get_db()
+
         cur = conn.cursor()
 
         try:
+
             cur.execute(
                 "INSERT INTO users (username, password) VALUES (?, ?)",
                 (username, hashed_pw)
@@ -96,31 +125,39 @@ def register():
 
             print("REGISTER SUCCESS")
 
-            return redirect(url_for('home'))
+            return redirect(url_for("home"))
 
-        except sqlite3.IntegrityError as e:
-            print("REGISTER ERROR:", e)
+        except sqlite3.IntegrityError:
+
+            print("USERNAME EXISTS")
+
             return "Этот логин уже занят!"
 
         except Exception as e:
+
             print("BIG ERROR:", e)
+
             return str(e)
 
         finally:
+
             conn.close()
 
-    return render_template('index.html')
+    return render_template("index.html")
 
 
-@app.route('/login', methods=['GET', 'POST'])
+# LOGIN
+
+@app.route("/login", methods=["GET", "POST"])
 def login():
 
-    if request.method == 'POST':
+    if request.method == "POST":
 
-        username = request.form.get('username')
-        password = request.form.get('password')
+        username = request.form.get("username")
+        password = request.form.get("password")
 
         conn = get_db()
+
         cur = conn.cursor()
 
         cur.execute(
@@ -135,21 +172,25 @@ def login():
         if user:
             print("USER FOUND")
 
-        if user and check_password_hash(user['password'], password):
+        if user and check_password_hash(user["password"], password):
 
             print("LOGIN SUCCESS")
 
-            session["user_id"] = user['id']
-            session["username"] = user['username']
+            session["user_id"] = user["id"]
+            session["username"] = user["username"]
 
-            return redirect(url_for('dashboard'))
+            return redirect(url_for("dashboard"))
 
         else:
+
             print("LOGIN FAILED")
+
             return "Неверный логин или пароль!"
 
-    return render_template('index.html')
+    return render_template("index.html")
 
+
+# DASHBOARD
 
 @app.route("/dashboard")
 def dashboard():
@@ -164,6 +205,8 @@ def dashboard():
         username=session["username"]
     )
 
+
+# BOOK
 
 @app.route("/book", methods=["POST"])
 def book():
@@ -181,6 +224,7 @@ def book():
     price = 10000 if trainer == "with" else 5000
 
     conn = get_db()
+
     cur = conn.cursor()
 
     cur.execute("""
@@ -212,6 +256,8 @@ def book():
     return redirect(url_for("profile"))
 
 
+# PROFILE
+
 @app.route("/profile")
 def profile():
 
@@ -219,19 +265,21 @@ def profile():
         return redirect(url_for("home"))
 
     conn = get_db()
+
     cur = conn.cursor()
 
     cur.execute("""
-        SELECT id,
-               training_type,
-               gym_zone,
-               gym_address,
-               booking_date,
-               booking_time,
-               trainer_type,
-               price
+        SELECT
+            id,
+            training_type,
+            gym_zone,
+            gym_address,
+            booking_date,
+            booking_time,
+            trainer_type,
+            price
         FROM bookings
-        WHERE user_id=?
+        WHERE user_id = ?
         ORDER BY id DESC
     """, (session["user_id"],))
 
@@ -244,6 +292,8 @@ def profile():
         bookings=bookings
     )
 
+
+# UPDATE BOOKING
 
 @app.route("/update/<int:bid>", methods=["POST"])
 def update_booking(bid):
@@ -261,11 +311,13 @@ def update_booking(bid):
     price = 10000 if trainer == "with" else 5000
 
     conn = get_db()
+
     cur = conn.cursor()
 
     cur.execute("""
         UPDATE bookings
-        SET training_type = ?,
+        SET
+            training_type = ?,
             gym_zone = ?,
             gym_address = ?,
             booking_date = ?,
@@ -291,6 +343,8 @@ def update_booking(bid):
     return redirect(url_for("profile"))
 
 
+# DELETE BOOKING
+
 @app.route("/delete/<int:bid>", methods=["POST"])
 def delete(bid):
 
@@ -298,10 +352,11 @@ def delete(bid):
         return redirect(url_for("home"))
 
     conn = get_db()
+
     cur = conn.cursor()
 
     cur.execute(
-        "DELETE FROM bookings WHERE id=? AND user_id=?",
+        "DELETE FROM bookings WHERE id = ? AND user_id = ?",
         (bid, session["user_id"])
     )
 
@@ -311,6 +366,8 @@ def delete(bid):
     return redirect(url_for("profile"))
 
 
+# LOGOUT
+
 @app.route("/logout")
 def logout():
 
@@ -319,5 +376,12 @@ def logout():
     return redirect(url_for("home"))
 
 
+# START
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+
+    app.run(
+        host="0.0.0.0",
+        port=5000,
+        debug=True
+    )

@@ -2,17 +2,20 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <!-- КРИТИЧЕСКИ ВАЖНО ДЛЯ МОБИЛЬНЫХ -->
+
+    <!-- Mobile support -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Gym Bro - Авторизация</title>
 
     <style>
+
         * {
             box-sizing: border-box;
         }
 
         body {
-            background: linear-gradient(rgba(11, 15, 20, 0.75), rgba(11, 15, 20, 0.75)), url('https://images.unsplash.com/photo-1571902943202-507ec2618e8f?q=80&w=1075&auto=format&fit=crop');
+            background: linear-gradient( rgba(11, 15, 20, 0.75), rgba(11, 15, 20, 0.75) ), url('https://images.unsplash.com/photo-1571902943202-507ec2618e8f?q=80&w=1075&auto=format&fit=crop');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -23,16 +26,16 @@
             justify-content: center;
             min-height: 100vh;
             margin: 0;
-            padding: 20px; /* Чтобы на смартфонах контейнер не прилипал к верху/низу */
+            padding: 20px;
         }
 
         .auth-container {
             background: rgba(17, 24, 39, 0.8);
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px); /* Поддержка для Safari (iPhone) */
+            -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
-            padding: 40px 30px; /* Немного уменьшили боковые отступы для узких экранов */
+            padding: 40px 30px;
             width: 100%;
             max-width: 380px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
@@ -54,8 +57,8 @@
             padding: 14px;
             border-radius: 10px;
             margin-bottom: 15px;
-            width: 100%; /* Занимает всю ширину контейнера */
-            font-size: 16px; /* Защита от авто-зума на iOS при фокусе */
+            width: 100%;
+            font-size: 16px;
             outline: none;
             transition: 0.2s;
         }
@@ -77,7 +80,7 @@
             font-size: 16px;
             cursor: pointer;
             transition: 0.3s;
-            -webkit-tap-highlight-color: transparent; /* Убирает синий блик при тапе на мобильных */
+            -webkit-tap-highlight-color: transparent;
         }
 
             .btn-login:hover {
@@ -85,7 +88,7 @@
             }
 
             .btn-login:active {
-                transform: scale(0.98); /* Приятный отклик при нажатии */
+                transform: scale(0.98);
             }
 
         .create-account-link {
@@ -104,8 +107,8 @@
                 color: white;
             }
 
-        /* Дополнительная оптимизация для совсем маленьких экранов (до 360px) */
         @media (max-width: 360px) {
+
             .auth-container {
                 padding: 30px 20px;
             }
@@ -117,44 +120,81 @@
         }
     </style>
 </head>
+
 <body>
 
     <div class="auth-container">
+
         <div class="logo-placeholder">
-            GYM <span id="logo-accent" style="color: #6366f1;">BRO</span>
+            GYM
+            <span id="logo-accent" style="color: #6366f1;">
+                BRO
+            </span>
         </div>
 
         <form id="auth-form" method="POST" action="/login">
-            <!-- Добавлены типы для лучшего вызова мобильной клавиатуры -->
-            <input class="form-control-saas" type="text" name="username" placeholder="Логин" required autocomplete="username">
-            <input class="form-control-saas" type="password" name="password" placeholder="Пароль" required autocomplete="current-password">
 
-            <button type="submit" class="btn-login">Вход</button>
+            <input class="form-control-saas"
+                   type="text"
+                   name="username"
+                   placeholder="Логин"
+                   required
+                   autocomplete="username">
+
+            <input class="form-control-saas"
+                   type="password"
+                   name="password"
+                   placeholder="Пароль"
+                   required
+                   autocomplete="current-password">
+
+            <button type="submit" class="btn-login">
+                Вход
+            </button>
+
         </form>
 
-        <a class="create-account-link">Create Account</a>
+        <a class="create-account-link">
+            Create Account
+        </a>
+
     </div>
 
     <script>
+
         const link = document.querySelector('.create-account-link');
         const form = document.querySelector('#auth-form');
         const accent = document.querySelector('#logo-accent');
         const btn = document.querySelector('.btn-login');
 
         link.addEventListener('click', (e) => {
+
             e.preventDefault();
 
             if (form.getAttribute('action') === '/login') {
+
                 form.setAttribute('action', '/register');
+
                 accent.innerText = 'REGISTRATION';
+
                 btn.innerText = 'Зарегистрироваться';
+
                 link.innerText = 'Already have an account? Login';
+
             } else {
+
                 form.setAttribute('action', '/login');
+
                 accent.innerText = 'BRO';
+
                 btn.innerText = 'Вход';
+
                 link.innerText = 'Create Account';
             }
+
+        });
+
     </script>
+
 </body>
 </html>
