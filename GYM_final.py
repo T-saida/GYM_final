@@ -1,3 +1,4 @@
+import os
 import sqlite3
 from flask import Flask, render_template, request, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -6,8 +7,11 @@ app = Flask(__name__)
 app.secret_key = "gym_saas_key"
 
 
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+DB_PATH = os.path.join(BASE_DIR, "gym.db")
+
 def init_db():
-    conn = sqlite3.connect("gym.db")
+    conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
 
     cur.execute("""
@@ -36,8 +40,11 @@ def init_db():
     conn.commit()
     conn.close()
 
+
+init_db()
+
 def get_db():
-    conn = sqlite3.connect("gym.db")
+    conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -53,13 +60,15 @@ def home():
     return render_template("index.html")
 
 
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
         
+        if not username or not password:
+            return "Заполните все поля!"
+            
         hashed_pw = generate_password_hash(password)
         
         conn = get_db()
@@ -74,6 +83,7 @@ def register():
             conn.close()
             
     return render_template('index.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -95,8 +105,6 @@ def login():
             return "Неверный логин или пароль!"
             
     return render_template('index.html')
-
-
 
 
 @app.route("/dashboard")
@@ -180,6 +188,7 @@ def profile():
 
     return render_template("profile.html", bookings=bookings)
 
+
 @app.route("/update/<int:bid>", methods=["POST"])
 def update_booking(bid):
     if not login_required():
@@ -251,5 +260,4 @@ def logout():
 
 
 if __name__ == "__main__":
-    init_db()
     app.run(debug=True)
