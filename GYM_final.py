@@ -24,7 +24,7 @@ app.config.update(
     SESSION_COOKIE_SAMESITE="Lax"
 )
 
-# DATABASE
+
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
@@ -82,7 +82,7 @@ def login_required():
     return "user_id" in session
 
 
-# HOME
+
 
 @app.route("/")
 def home():
@@ -93,7 +93,7 @@ def home():
     return render_template("index.html")
 
 
-# REGISTER
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -146,7 +146,7 @@ def register():
     return render_template("index.html")
 
 
-# LOGIN
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -190,7 +190,7 @@ def login():
     return render_template("index.html")
 
 
-# DASHBOARD
+
 
 @app.route("/dashboard")
 def dashboard():
@@ -206,7 +206,7 @@ def dashboard():
     )
 
 
-# BOOK
+
 
 @app.route("/book", methods=["POST"])
 def book():
@@ -256,7 +256,7 @@ def book():
     return redirect(url_for("profile"))
 
 
-# PROFILE
+
 
 @app.route("/profile")
 def profile():
@@ -293,7 +293,7 @@ def profile():
     )
 
 
-# UPDATE BOOKING
+
 
 @app.route("/update/<int:bid>", methods=["POST"])
 def update_booking(bid):
@@ -343,7 +343,7 @@ def update_booking(bid):
     return redirect(url_for("profile"))
 
 
-# DELETE BOOKING
+
 
 @app.route("/delete/<int:bid>", methods=["POST"])
 def delete(bid):
@@ -366,7 +366,7 @@ def delete(bid):
     return redirect(url_for("profile"))
 
 
-# LOGOUT
+
 
 @app.route("/logout")
 def logout():
@@ -376,7 +376,7 @@ def logout():
     return redirect(url_for("home"))
 
 
-# START
+
 
 if __name__ == "__main__":
 
